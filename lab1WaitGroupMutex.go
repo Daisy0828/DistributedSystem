@@ -1,29 +1,17 @@
 package main
+
 import (
-    "fmt"
-    "sync" // TODO: Use sync with WaitGroup and Mutex!
+	"fmt"
 )
 
-type SafeValue struct{
-    v int
-    m sync.Mutex
-}
-
-var x = SafeValue{v:0}
-var wg sync.WaitGroup
-
+var x  = 0
 func increment() {
-    x.m.Lock()
-	x.v = x.v + 5
-	x.m.Unlock()
-    wg.Done()
+	x = x + 5
 }
 
 func main() {
-    for i := 0; i < 100; i++ {
-        wg.Add(1)
-        go increment()
-    }
-    wg.Wait()
-    fmt.Println("final x", x.v)
+	for i := 0; i < 100; i++ {
+		go increment()
+	}
+	fmt.Println("final x", x)
 }
